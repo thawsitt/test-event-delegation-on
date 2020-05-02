@@ -1,26 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
 
-function App() {
+const numButtons = 3000;
+
+const FancyButton = ({ label, id, isSelected }) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <button
+        key={id}
+        id={id}
+        className={`button${isSelected ? " selected" : ""}`}
+      >
+        {label}
+      </button>
     </div>
   );
-}
+};
+
+const App = () => {
+  // A set containing ids of selected items
+  const [selectedItems, setSelectedItems] = React.useState(new Set());
+
+  // ids = ["0", "1", ...., "2999"]
+  const ids = [...Array(numButtons).keys()].map((n) => n.toString());
+
+  // Add id to selectedItems
+  const handleClick = (event) => {
+    // Get id from button element
+    const id = event.target.id;
+    setSelectedItems((prevState) => new Set([...prevState, id]));
+  };
+
+  return (
+    <div className="app">
+      <h1>Using Event Delegation</h1>
+      {/* Notice that there is only one onClick added to parent container*/}
+      <div className="container" onClick={handleClick}>
+        {ids.map((id) => (
+          <FancyButton
+            key={id}
+            id={id}
+            label={id}
+            isSelected={selectedItems.has(id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default App;
